@@ -86,6 +86,11 @@
         let serverOffset = 0;
         const ADMIN_PASSWORD = "111";
 
+        const RAW_GAS_URL = "%VITE_GAS_URL%";
+        const ENV_GAS_URL = RAW_GAS_URL.startsWith("%VITE_") ? "" : RAW_GAS_URL;
+        const ENV_IS_LOCAL = "%VITE_IS_LOCAL%" === "true";
+        const HAS_ENV_CONFIG = ENV_GAS_URL !== "";
+
         const TimerCircle = ({ endTime, isRunning, onFinish }) => {
             const [timeLeft, setTimeLeft] = useState(20);
             useEffect(() => {
@@ -585,7 +590,7 @@
             );
         };
 
-        const SetupView = ({ onGo, isLocal, setIsLocal, url, setUrl }) => {
+        const SetupView = ({ onGo, isLocal, setIsLocal, url, setUrl, hasEnvConfig }) => {
             const [pId, setPId] = useState(1);
             const [showPass, setShowPass] = useState(false);
             const [pass, setPass] = useState("");
@@ -601,26 +606,25 @@
                     <div className="bg-slate-800 p-8 rounded-[2rem] border border-slate-700 shadow-2xl space-y-6">
                         <div className="text-center"><h1 className="text-3xl font-black text-indigo-400">نظام مشكاة للمسابقات</h1><p className="text-slate-500 text-xs mt-2">v5.9 Local Edition</p></div>
 
-                        <div className="flex items-center justify-between p-4 bg-slate-900 rounded-2xl border border-slate-700">
-                            <span className="text-slate-300 font-bold">الوضع المحلي (Offline)</span>
-                            <button
-                                onClick={() => setIsLocal(!isLocal)}
-                                className={`w-14 h-8 rounded-full transition-all relative ${isLocal ? 'bg-emerald-500' : 'bg-slate-700'}`}
-                            >
-                                <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${isLocal ? 'left-7' : 'left-1'}`}></div>
-                            </button>
-                        </div>
+                        {!hasEnvConfig && (
+                            <>
+                                <div className="flex items-center justify-between p-4 bg-slate-900 rounded-2xl border border-slate-700">
+                                    <span className="text-slate-300 font-bold">الوضع المحلي (Offline)</span>
+                                    <button
+                                        onClick={() => setIsLocal(!isLocal)}
+                                        className={`w-14 h-8 rounded-full transition-all relative ${isLocal ? 'bg-emerald-500' : 'bg-slate-700'}`}
+                                    >
+                                        <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${isLocal ? 'left-7' : 'left-1'}`}></div>
+                                    </button>
+                                </div>
 
-                        {!isLocal && url && (
-                            <div className="p-3 bg-emerald-900/40 border border-emerald-500/30 rounded-xl text-emerald-400 text-xs font-bold flex items-center gap-2 justify-center">
-                                <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
-                                متصل بقاعدة البيانات السحابية (Online)
-                            </div>
-                        )}
-                        {!isLocal && !url && (
-                            <div className="p-3 bg-rose-900/40 border border-rose-500/30 rounded-xl text-rose-400 text-xs font-bold text-center">
-                                ⚠ تحذير: الرجاء إعداد VITE_GAS_URL في ملف .env
-                            </div>
+                                {!isLocal && (
+                                    <div className="space-y-2 animate-fade-in">
+                                        <label className="text-xs font-bold text-slate-400 block px-1 text-right">رابط Google Script</label>
+                                        <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://script.google.com/..." className="w-full p-4 bg-slate-900 border border-slate-700 rounded-xl text-white text-left font-mono text-xs outline-none focus:border-indigo-500" dir="ltr" />
+                                    </div>
+                                )}
+                            </>
                         )}
                         {!showPass ? (
                             <div className="grid grid-cols-2 gap-4">
@@ -647,29 +651,13 @@
         };
 
         const App = () => {
-            const VITE_GAS_URL = "%VITE_GAS_URL%"; // Injected by Vite
-            const VITE_IS_LOCAL = "%VITE_IS_LOCAL%"; // Injected by Vite
-
             const [mode, setMode] = useState('SETUP');
-            const [url, setUrl] = useState('');
+            const [url, setUrl] = useState(ENV_GAS_URL);
             const [pId, setPId] = useState(null);
-
-            // Default to true, unless VITE_IS_LOCAL explicitly says "false"
-            const [isLocal, setIsLocal] = useState(true);
+            const [isLocal, setIsLocal] = useState(ENV_IS_LOCAL);
 
             useEffect(() => {
-                let savedUrl = localStorage.getItem('gas_url');
-                let initialIsLocal = true;
-
-                // Use .env variable if it was replaced by Vite
-                if (VITE_GAS_URL && !VITE_GAS_URL.startsWith('%VITE')) {
-                    savedUrl = VITE_GAS_URL;
-                }
-
-                if (VITE_IS_LOCAL && !VITE_IS_LOCAL.startsWith('%VITE')) {
-                    initialIsLocal = VITE_IS_LOCAL.toLowerCase() !== 'false';
-                }
-
+                const savedUrl = ENV_GAS_URL || localStorage.getItem('gas_url');
                 const savedMode = localStorage.getItem('mishkat_mode');
                 const savedPId = localStorage.getItem('mishkat_pid');
                 const savedIsLocal = localStorage.getItem('mishkat_is_local');
@@ -678,11 +666,10 @@
                 if (savedMode) setMode(savedMode);
                 if (savedPId) setPId(parseInt(savedPId));
 
-                // localStorage overrides .env if the user actively changed it during a previous session
-                if (savedIsLocal !== null) {
+                if (ENV_GAS_URL !== "") {
+                    setIsLocal(ENV_IS_LOCAL);
+                } else if (savedIsLocal !== null) {
                     setIsLocal(savedIsLocal === 'true');
-                } else {
-                    setIsLocal(initialIsLocal);
                 }
             }, []);
 
@@ -723,7 +710,7 @@
                         {mode !== 'SETUP' && <button onClick={handleLogout} className="text-xs bg-slate-800 px-4 py-2 rounded-xl text-slate-400 hover:text-white border border-slate-700 transition-all">إنهاء الجلسة</button>}
                     </nav>
                     <div className="flex-grow">
-                        {mode === 'SETUP' && <SetupView onGo={onGo} isLocal={isLocal} setIsLocal={setIsLocal} url={url} setUrl={setUrl} />}
+                        {mode === 'SETUP' && <SetupView onGo={onGo} isLocal={isLocal} setIsLocal={setIsLocal} url={url} setUrl={setUrl} hasEnvConfig={HAS_ENV_CONFIG} />}
                         {mode === 'ADMIN' && <AdminView getApiUrl={getApiUrl} />}
                         {mode === 'PLAYER' && <PlayerView getApiUrl={getApiUrl} playerId={pId} />}
                     </div>
