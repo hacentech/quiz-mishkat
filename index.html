@@ -648,16 +648,26 @@
 
         const App = () => {
             const VITE_GAS_URL = "%VITE_GAS_URL%"; // Injected by Vite
+            const VITE_IS_LOCAL = "%VITE_IS_LOCAL%"; // Injected by Vite
+
             const [mode, setMode] = useState('SETUP');
             const [url, setUrl] = useState('');
             const [pId, setPId] = useState(null);
+
+            // Default to true, unless VITE_IS_LOCAL explicitly says "false"
             const [isLocal, setIsLocal] = useState(true);
 
             useEffect(() => {
                 let savedUrl = localStorage.getItem('gas_url');
+                let initialIsLocal = true;
+
                 // Use .env variable if it was replaced by Vite
                 if (VITE_GAS_URL && !VITE_GAS_URL.startsWith('%VITE')) {
                     savedUrl = VITE_GAS_URL;
+                }
+
+                if (VITE_IS_LOCAL && !VITE_IS_LOCAL.startsWith('%VITE')) {
+                    initialIsLocal = VITE_IS_LOCAL.toLowerCase() !== 'false';
                 }
 
                 const savedMode = localStorage.getItem('mishkat_mode');
@@ -667,7 +677,13 @@
                 if (savedUrl) setUrl(savedUrl);
                 if (savedMode) setMode(savedMode);
                 if (savedPId) setPId(parseInt(savedPId));
-                if (savedIsLocal !== null) setIsLocal(savedIsLocal === 'true');
+
+                // localStorage overrides .env if the user actively changed it during a previous session
+                if (savedIsLocal !== null) {
+                    setIsLocal(savedIsLocal === 'true');
+                } else {
+                    setIsLocal(initialIsLocal);
+                }
             }, []);
 
             const onGo = (u, m, p) => {
