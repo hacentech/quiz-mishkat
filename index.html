@@ -232,15 +232,28 @@
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        {['A', 'B', 'C', 'D'].map(key => (
-                            <button key={key} disabled={!data.status.isVotingOpen && myAnswer !== key} onClick={() => submit(key)}
-                                className={`p-6 rounded-2xl border-2 transition-all flex items-center gap-4 text-xl font-bold
-                                ${myAnswer === key ? 'bg-indigo-600 border-indigo-400 scale-105 shadow-xl shadow-indigo-500/30' : 'bg-slate-800 border-slate-700'}
-                                ${!data.status.isVotingOpen && myAnswer !== key ? 'opacity-40 grayscale-[0.5]' : 'hover:border-indigo-500 active:scale-95'}`}>
-                                <span className={`w-10 h-10 rounded-lg flex items-center justify-center ${myAnswer === key ? 'bg-white text-indigo-600' : 'bg-slate-700 text-slate-300'}`}>{key}</span>
-                                {data.question?.[key.toLowerCase()] || "---"}
-                            </button>
-                        ))}
+                        {['A', 'B', 'C', 'D'].map(key => {
+                            const isChosen = myAnswer === key;
+                            const hasAnswered = !!myAnswer;
+                            const votingClosed = !data.status.isVotingOpen;
+                            const isDisabled = hasAnswered && !isChosen;
+                            const isInactive = isDisabled || (votingClosed && !isChosen);
+                            return (
+                                <button key={key}
+                                    disabled={isInactive}
+                                    onClick={() => submit(key)}
+                                    className={`p-6 rounded-2xl border-2 transition-all flex items-center gap-4 text-xl font-bold
+                                    ${isChosen
+                                            ? 'bg-indigo-600 border-indigo-400 scale-105 shadow-xl shadow-indigo-500/30'
+                                            : isInactive
+                                                ? 'bg-slate-800/50 border-slate-700/50 opacity-40 cursor-not-allowed pointer-events-none select-none'
+                                                : 'bg-slate-800 border-slate-700 hover:border-indigo-500 active:scale-95 cursor-pointer'
+                                        }`}>
+                                    <span className={`w-10 h-10 rounded-lg flex items-center justify-center ${isChosen ? 'bg-white text-indigo-600' : 'bg-slate-700 text-slate-300'}`}>{key}</span>
+                                    {data.question?.[key.toLowerCase()] || "---"}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             );
