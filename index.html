@@ -386,7 +386,7 @@
                             <button onClick={() => setActiveTab('control')} className={`px-6 py-2 rounded-xl font-bold transition-all ${activeTab === 'control' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800'}`}>لوحة التحكم</button>
                             <button onClick={() => setActiveTab('questions')} className={`px-6 py-2 rounded-xl font-bold transition-all ${activeTab === 'questions' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800'}`}>إدارة الأسئلة</button>
                         </div>
-                        <button onClick={() => { if (confirm('إنهاء المسابقة؟')) toggleGameStatus(false); }} className="text-xs bg-rose-500/10 text-rose-400 px-3 py-1.5 rounded-lg border border-rose-500/20">إنهاء المسابقة</button>
+                        <button onClick={() => { if (confirm('إنهاء المسابقة؟')) toggleGameStatus(false); }} className="text-xs bg-rose-500/10 hover:bg-rose-500/30 text-rose-400 hover:text-rose-300 px-3 py-1.5 rounded-lg border border-rose-500/20 hover:border-rose-500/50 transition-all cursor-pointer">إنهاء المسابقة</button>
                     </div>
 
                     {activeTab === 'questions' ? (
@@ -435,12 +435,12 @@
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <button onClick={() => performAction('prevQuestion')} className="py-4 bg-slate-800 rounded-2xl font-black text-white border border-slate-700">السؤال السابق</button>
-                                        <button onClick={() => performAction('nextQuestion')} className="py-4 bg-slate-800 rounded-2xl font-black text-white border border-slate-700">السؤال التالي</button>
+                                        <button onClick={() => performAction('prevQuestion')} className="py-4 bg-slate-800 hover:bg-slate-700 rounded-2xl font-black text-white border border-slate-700 hover:border-slate-500 transition-all active:scale-95 cursor-pointer">السؤال السابق</button>
+                                        <button onClick={() => performAction('nextQuestion')} className="py-4 bg-slate-800 hover:bg-slate-700 rounded-2xl font-black text-white border border-slate-700 hover:border-slate-500 transition-all active:scale-95 cursor-pointer">السؤال التالي</button>
                                     </div>
                                     <div className="flex gap-4">
-                                        <button onClick={() => performAction('toggleVoting')} className={`flex-grow py-6 rounded-[2rem] font-black text-2xl text-white ${status.isVotingOpen ? 'bg-rose-600' : 'bg-emerald-600'}`}>{status.isVotingOpen ? 'إيقاف التصويت' : 'بدء التصويت'}</button>
-                                        <button onClick={() => performAction('updateScores')} className="w-24 bg-blue-600 rounded-[2rem] font-black text-white flex flex-col items-center justify-center"><span className="text-xl">⚡</span><span className="text-[10px]">احتساب</span></button>
+                                        <button onClick={() => performAction('toggleVoting')} className={`flex-grow py-6 rounded-[2rem] font-black text-2xl text-white transition-all active:scale-95 cursor-pointer ${status.isVotingOpen ? 'bg-rose-600 hover:bg-rose-500' : 'bg-emerald-600 hover:bg-emerald-500'}`}>{status.isVotingOpen ? 'إيقاف التصويت' : 'بدء التصويت'}</button>
+                                        <button onClick={() => performAction('updateScores')} className="w-24 bg-blue-600 hover:bg-blue-500 rounded-[2rem] font-black text-white flex flex-col items-center justify-center transition-all active:scale-95 cursor-pointer"><span className="text-xl">⚡</span><span className="text-[10px]">احتساب</span></button>
                                     </div>
                                 </div>
 
@@ -516,27 +516,27 @@
                                         <span className="text-xs font-bold text-slate-500 ml-4">اختر الفقرة النشطة:</span>
 
                                         <button onClick={() => performAction('setActiveSegment', '&segment=1')}
-                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeSeg == 1 ? 'bg-emerald-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400'}`}>
+                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 cursor-pointer ${activeSeg == 1 ? 'bg-emerald-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400 hover:bg-slate-600 hover:text-white'}`}>
                                             الفقرة 1 (اختر صح)
                                         </button>
 
                                         <button onClick={() => performAction('setActiveSegment', '&segment=2')}
-                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeSeg == 2 ? 'bg-amber-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400'}`}>
+                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 cursor-pointer ${activeSeg == 2 ? 'bg-amber-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400 hover:bg-slate-600 hover:text-white'}`}>
                                             الفقرة 2 (آيات بينات)
                                         </button>
 
                                         <button onClick={() => performAction('setActiveSegment', '&segment=3')}
-                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeSeg == 3 ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400'}`}>
+                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 cursor-pointer ${activeSeg == 3 ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400 hover:bg-slate-600 hover:text-white'}`}>
                                             الفقرة 3 (اختر بابك)
                                         </button>
 
                                         <button onClick={() => performAction('setActiveSegment', '&segment=4')}
-                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeSeg == 4 ? 'bg-purple-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400'}`}>
+                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 cursor-pointer ${activeSeg == 4 ? 'bg-purple-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400 hover:bg-slate-600 hover:text-white'}`}>
                                             الفقرة 4 (التحدي البصري)
                                         </button>
 
                                         <button onClick={() => performAction('setActiveSegment', '&segment=5')}
-                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeSeg == 5 ? 'bg-rose-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400'}`}>
+                                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 cursor-pointer ${activeSeg == 5 ? 'bg-rose-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400 hover:bg-slate-600 hover:text-white'}`}>
                                             الفقرة 5 (من أكون ؟)
                                         </button>
                                     </div>
@@ -577,10 +577,10 @@
                                         ))}
                                     </div>
                                     <div className="flex gap-2 mt-4 justify-end">
-                                        <button onClick={() => { if (confirm('هل أنت متأكد من تصفير نقاط الفقرة 2 للجميع؟')) performAction('resetSegment', '&segment=2') }} className="text-[10px] text-slate-500 hover:text-white px-2">تصفير S2</button>
-                                        <button onClick={() => { if (confirm('هل أنت متأكد من تصفير نقاط الفقرة 3 للجميع؟')) performAction('resetSegment', '&segment=3') }} className="text-[10px] text-slate-500 hover:text-white px-2">تصفير S3</button>
-                                        <button onClick={() => { if (confirm('هل أنت متأكد من تصفير نقاط الفقرة 4 للجميع؟')) performAction('resetSegment', '&segment=4') }} className="text-[10px] text-slate-500 hover:text-white px-2">تصفير S4</button>
-                                        <button onClick={() => { if (confirm('هل أنت متأكد من تصفير نقاط الفقرة 5 للجميع؟')) performAction('resetSegment', '&segment=5') }} className="text-[10px] text-slate-500 hover:text-white px-2">تصفير S5</button>
+                                        <button onClick={() => { if (confirm('هل أنت متأكد من تصفير نقاط الفقرة 2 للجميع؟')) performAction('resetSegment', '&segment=2') }} className="text-[10px] text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 px-2 py-1 rounded transition-all cursor-pointer">تصفير S2</button>
+                                        <button onClick={() => { if (confirm('هل أنت متأكد من تصفير نقاط الفقرة 3 للجميع؟')) performAction('resetSegment', '&segment=3') }} className="text-[10px] text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 px-2 py-1 rounded transition-all cursor-pointer">تصفير S3</button>
+                                        <button onClick={() => { if (confirm('هل أنت متأكد من تصفير نقاط الفقرة 4 للجميع؟')) performAction('resetSegment', '&segment=4') }} className="text-[10px] text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 px-2 py-1 rounded transition-all cursor-pointer">تصفير S4</button>
+                                        <button onClick={() => { if (confirm('هل أنت متأكد من تصفير نقاط الفقرة 5 للجميع؟')) performAction('resetSegment', '&segment=5') }} className="text-[10px] text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 px-2 py-1 rounded transition-all cursor-pointer">تصفير S5</button>
                                     </div>
                                 </div>
 
