@@ -421,9 +421,22 @@
                                             })}
                                         </div>
                                     </div>
+                                    <div className="flex items-center gap-4 bg-[#1a2333] p-4 rounded-2xl border border-slate-800">
+                                        <span className="text-slate-400 font-bold whitespace-nowrap">انتقال إلى سؤال:</span>
+                                        <select
+                                            value={status.currentQuestionId}
+                                            onChange={(e) => performAction('setQuestion', `&qId=${e.target.value}`)}
+                                            className="flex-grow p-3 bg-slate-900 border border-slate-700 rounded-xl text-white font-bold outline-none focus:border-indigo-500"
+                                            disabled={loading}
+                                        >
+                                            {Array.from({ length: status.totalQuestions }, (_, i) => i + 1).map(q => (
+                                                <option key={q} value={q}>السؤال {q}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <button onClick={() => performAction('prevQuestion')} className="py-4 bg-slate-800 rounded-2xl font-black text-white border border-slate-700">السؤال السابق</button>
-                                        <button onClick={() => performAction('nextQuestion')} className="py-4 bg-slate-800 rounded-2xl font-black text-white border border-slate-700">السؤال التالي</button>
+                                        <button onClick={() => performAction('prevQuestion')} disabled={loading} className="py-4 bg-slate-800 disabled:opacity-50 hover:bg-slate-700 transition-colors rounded-2xl font-black text-white border border-slate-700">السؤال السابق</button>
+                                        <button onClick={() => performAction('nextQuestion')} disabled={loading} className="py-4 bg-slate-800 disabled:opacity-50 hover:bg-slate-700 transition-colors rounded-2xl font-black text-white border border-slate-700">السؤال التالي</button>
                                     </div>
                                     <div className="flex gap-4">
                                         <button onClick={() => performAction('toggleVoting')} className={`flex-grow py-6 rounded-[2rem] font-black text-2xl text-white ${status.isVotingOpen ? 'bg-rose-600' : 'bg-emerald-600'}`}>{status.isVotingOpen ? 'إيقاف التصويت' : 'بدء التصويت'}</button>

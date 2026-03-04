@@ -184,6 +184,17 @@ function doGet(e) {
         case 'prevQuestion':
           moveQ(statusSheet, -1);
           break;
+        case 'setQuestion':
+          const targetQId = parseInt(e.parameter.qId);
+          if (!isNaN(targetQId) && targetQId > 0) {
+            statusSheet.getRange(2, 1).setValue(targetQId);
+            statusSheet.getRange(2, 2).setValue('TRUE'); // التصويت يفتح تلقائياً
+            statusSheet.getRange(2, 12).setValue(0);
+            statusSheet.getRange(2, 4, 1, 8).clearContent();
+            statusSheet.getRange("N2").clearContent();
+            statusSheet.getRange("P1").clearContent();
+          }
+          break;
 
         case 'updateScores':
           const scoresResult = handleUpdateScores(false);
