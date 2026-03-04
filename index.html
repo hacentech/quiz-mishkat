@@ -338,10 +338,10 @@
                     <div className="max-w-4xl mx-auto p-8 flex flex-col items-center justify-center min-h-[80vh] animate-fade-in space-y-12 relative">
                         {/* LOADING OVERLAY */}
                         {loading && (
-                            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/80 backdrop-blur-md">
-                                <div className="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl shadow-emerald-500/20 flex flex-col items-center gap-6 transform scale-110">
-                                    <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-                                    <span className="text-xl font-black text-emerald-400 tracking-wider">جاري بدء المسابقة...</span>
+                            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
+                                <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-2xl flex flex-col items-center gap-4">
+                                    <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                                    <span className="font-bold text-emerald-400">جاري بدء المسابقة...</span>
                                 </div>
                             </div>
                         )}
@@ -360,10 +360,10 @@
                 <div className="max-w-6xl mx-auto p-4 space-y-8 animate-fade-in pb-20 relative">
                     {/* LOADING OVERLAY */}
                     {loading && (
-                        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/80 backdrop-blur-md">
-                            <div className="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl shadow-indigo-500/20 flex flex-col items-center gap-6 transform scale-110">
-                                <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                                <span className="text-xl font-black text-indigo-400 tracking-wider">جاري تنفيذ الأمر...</span>
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
+                            <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-2xl flex flex-col items-center gap-4">
+                                <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                                <span className="font-bold text-indigo-400">جاري تنفيذ الأمر...</span>
                             </div>
                         </div>
                     )}
@@ -421,22 +421,9 @@
                                             })}
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-4 bg-[#1a2333] p-4 rounded-2xl border border-slate-800">
-                                        <span className="text-slate-400 font-bold whitespace-nowrap">انتقال إلى سؤال:</span>
-                                        <select
-                                            value={status.currentQuestionId}
-                                            onChange={(e) => performAction('setQuestion', `&qId=${e.target.value}`)}
-                                            className="flex-grow p-3 bg-slate-900 border border-slate-700 rounded-xl text-white font-bold outline-none focus:border-indigo-500"
-                                            disabled={loading}
-                                        >
-                                            {Array.from({ length: status.totalQuestions }, (_, i) => i + 1).map(q => (
-                                                <option key={q} value={q}>السؤال {q}</option>
-                                            ))}
-                                        </select>
-                                    </div>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <button onClick={() => performAction('prevQuestion')} disabled={loading} className="py-4 bg-slate-800 disabled:opacity-50 hover:bg-slate-700 transition-colors rounded-2xl font-black text-white border border-slate-700">السؤال السابق</button>
-                                        <button onClick={() => performAction('nextQuestion')} disabled={loading} className="py-4 bg-slate-800 disabled:opacity-50 hover:bg-slate-700 transition-colors rounded-2xl font-black text-white border border-slate-700">السؤال التالي</button>
+                                        <button onClick={() => performAction('prevQuestion')} className="py-4 bg-slate-800 rounded-2xl font-black text-white border border-slate-700">السؤال السابق</button>
+                                        <button onClick={() => performAction('nextQuestion')} className="py-4 bg-slate-800 rounded-2xl font-black text-white border border-slate-700">السؤال التالي</button>
                                     </div>
                                     <div className="flex gap-4">
                                         <button onClick={() => performAction('toggleVoting')} className={`flex-grow py-6 rounded-[2rem] font-black text-2xl text-white ${status.isVotingOpen ? 'bg-rose-600' : 'bg-emerald-600'}`}>{status.isVotingOpen ? 'إيقاف التصويت' : 'بدء التصويت'}</button>
