@@ -585,38 +585,22 @@
             );
         };
 
-        const SetupView = ({ onGo, isLocal, setIsLocal, url, setUrl }) => {
+        const SetupView = ({ onGo, isLocal, url }) => {
             const [pId, setPId] = useState(1);
             const [showPass, setShowPass] = useState(false);
             const [pass, setPass] = useState("");
             const handleGo = (m, p) => {
                 if (!isLocal && !url) {
-                    alert("يرجى إدخال رابط Google Script أو تفعيل الوضع المحلي");
+                    alert("خطأ: رابط Google Script غير متوفر في متغيرات النظام.");
                     return;
                 }
-                onGo(url, m, p);
+                onGo(m, p);
             };
             return (
                 <div className="max-w-md mx-auto py-20 px-4 animate-fade-in">
                     <div className="bg-slate-800 p-8 rounded-[2rem] border border-slate-700 shadow-2xl space-y-6">
-                        <div className="text-center"><h1 className="text-3xl font-black text-indigo-400">نظام مشكاة للمسابقات</h1><p className="text-slate-500 text-xs mt-2">v5.9 Local Edition</p></div>
+                        <div className="text-center"><h1 className="text-3xl font-black text-indigo-400">نظام مشكاة للمسابقات</h1><p className="text-slate-500 text-xs mt-2">v5.9 {isLocal ? 'Local Edition' : 'Online Edition'}</p></div>
 
-                        <div className="flex items-center justify-between p-4 bg-slate-900 rounded-2xl border border-slate-700">
-                            <span className="text-slate-300 font-bold">الوضع المحلي (Offline)</span>
-                            <button
-                                onClick={() => setIsLocal(!isLocal)}
-                                className={`w-14 h-8 rounded-full transition-all relative ${isLocal ? 'bg-emerald-500' : 'bg-slate-700'}`}
-                            >
-                                <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${isLocal ? 'left-7' : 'left-1'}`}></div>
-                            </button>
-                        </div>
-
-                        {!isLocal && (
-                            <div className="space-y-2 animate-fade-in">
-                                <label className="text-xs font-bold text-slate-400 block px-1 text-right">رابط Google Script</label>
-                                <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://script.google.com/..." className="w-full p-4 bg-slate-900 border border-slate-700 rounded-xl text-white text-left font-mono text-xs outline-none focus:border-indigo-500" dir="ltr" />
-                            </div>
-                        )}
                         {!showPass ? (
                             <div className="grid grid-cols-2 gap-4">
                                 <button onClick={() => setShowPass(true)} className="py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold transition-all text-white shadow-lg shadow-indigo-600/20">دخول كمسؤول</button>
@@ -645,30 +629,38 @@
             const [mode, setMode] = useState('SETUP');
             const [url, setUrl] = useState('');
             const [pId, setPId] = useState(null);
-            const [isLocal, setIsLocal] = useState(true);
+            const [isLocal, setIsLocal] = useState(false); // Default false
 
             useEffect(() => {
-                const savedUrl = localStorage.getItem('gas_url');
+                // Initialize from environment variables
+                let envUrl = '';
+                let envIsLocal = true;
+
+                try {
+                    envUrl = process.env.VITE_GAS_URL || '';
+                    envIsLocal = process.env.VITE_IS_LOCAL === true || process.env.VITE_IS_LOCAL === 'true';
+                } catch (e) {
+                    console.log("Env vars not available in raw HTML mode, falling back to defaults.");
+                }
+
+                setUrl(envUrl);
+                setIsLocal(envIsLocal);
+
+                // Recover user session from localStorage
                 const savedMode = localStorage.getItem('mishkat_mode');
                 const savedPId = localStorage.getItem('mishkat_pid');
-                const savedIsLocal = localStorage.getItem('mishkat_is_local');
 
-                if (savedUrl) setUrl(savedUrl);
                 if (savedMode) setMode(savedMode);
                 if (savedPId) setPId(parseInt(savedPId));
-                if (savedIsLocal !== null) setIsLocal(savedIsLocal === 'true');
             }, []);
 
-            const onGo = (u, m, p) => {
-                setUrl(u);
+            const onGo = (m, p) => {
                 setMode(m);
                 setPId(p);
 
-                if (u) localStorage.setItem('gas_url', u);
                 localStorage.setItem('mishkat_mode', m);
                 if (p) localStorage.setItem('mishkat_pid', p);
                 else localStorage.removeItem('mishkat_pid');
-                localStorage.setItem('mishkat_is_local', isLocal);
             };
 
             const handleLogout = () => {

@@ -12,7 +12,9 @@ export default defineConfig(({ mode }) => {
       plugins: [],
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+        'process.env.VITE_GAS_URL': JSON.stringify(env.VITE_GAS_URL || 'https://script.google.com/macros/s/AKfycbzgEzU_BTP5f2Ms7tk4b_UOmwwawwiMJ8xBMExoim2aesGtjTuwu6CQ4fhj5QS00WKv/exec'),
+        'process.env.VITE_IS_LOCAL': JSON.stringify(env.VITE_IS_LOCAL !== 'false') // Default to true if not explicitly false
       },
       resolve: {
         alias: {
